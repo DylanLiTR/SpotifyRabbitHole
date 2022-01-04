@@ -1,5 +1,5 @@
 from flask import Flask, g, render_template, request, make_response
-from SpotifyRH import start, search, accuracy
+from SpotifyRH import start, search
 import sqlite3
 import pandas as pd
 
@@ -11,9 +11,8 @@ app = Flask(__name__)
 def index():
 	cur = get_db().cursor()
 	
-	#cur.execute("DROP TABLE IF EXISTS labelled")
-	#cur.execute("DROP TABLE IF EXISTS unlabelled")
-	cur.execute("DROP TABLE IF EXISTS accuracy")
+	cur.execute("DROP TABLE IF EXISTS labelled")
+	cur.execute("DROP TABLE IF EXISTS unlabelled")
 	
 	cur.execute('''
 	CREATE TABLE IF NOT EXISTS labelled(
@@ -28,11 +27,6 @@ def index():
 		artist VARCHAR(64)
 	)
 	''')
-	cur.execute('''
-	CREATE TABLE IF NOT EXISTS accuracy(
-		score FLOAT
-	)
-	''')
 	
 	return render_template("index.html")
 
@@ -44,7 +38,7 @@ def confirm():
 		
 		track_id, title, artist = search(title, artist)
 		
-	return render_template("confirm.html", track_id=track_id, title=title, artist=artist)
+	return render_template("rabbithole.html", track_id=track_id, title=title, artist=artist)
 
 @app.route("/rabbithole", methods=["GET", "POST"])
 def rabbithole():
@@ -71,9 +65,6 @@ def rabbithole():
 		
 		## Update the unlabelled tracks in the SQlite table
 		unlabelled.to_sql(name='unlabelled', con=db, if_exists='replace', index=False)
-		
-		## Insert the current accuracy score of the classifier
-		cur.execute("INSERT INTO accuracy (score) VALUES (?)", (accuracy(labelled),))
 		
 		track_id = rec['track_id'].values[0]
 		title = rec['track_name'].values[0]

@@ -96,7 +96,7 @@ def fetch_audio_features(df):
 ## Request songs from Spotify's API, predict how much the user will like them, and return the top 5 along with all other unlabelled songs
 def get_recs(track_id, rating, labelled_df, unlabelled_df):
 	model = joblib.load("model.pkl")
-	if rating > 3:
+	if rating > 3 or unlabelled_df.empty:
 		sp_list = sp.recommendations(seed_tracks=[track_id], limit=100)['tracks']
 	
 		## Remove duplicates and songs the user has already labelled
@@ -121,23 +121,3 @@ def get_recs(track_id, rating, labelled_df, unlabelled_df):
 	rec_df = rec_df.head(1)
 	
 	return rec_df, unlabelled_df
-
-## Returns the accuracy score of the classifier predictions on the set of tracks labelled by the user
-def accuracy(labelled):
-	metric = metrics.Accuracy()
-	model = joblib.load("model.pkl")
-	
-	X = pd.DataFrame(fetch_audio_features(labelled))
-	print(X)
-	
-	y_true = labelled['rating'].to_list()
-	y_pred = model.predict_many(X).to_list()
-	
-	print("True", y_true)
-	print("Predicted", y_pred)
-	for yt, yp in zip(y_true, y_pred):
-		score = metric.update(yt, yp)
-	
-	print(confusion_matrix(y_true=y_true, y_pred=y_pred))
-	
-	return score.get()

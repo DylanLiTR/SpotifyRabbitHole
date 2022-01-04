@@ -1,6 +1,6 @@
 window.onload = function () {
-	document.getElementById("rate").addEventListener("click", check_radio)
-}
+	document.getElementById("rate").addEventListener("click", check_radio);
+};
 
 function check_radio(event) {
 	wrapper = document.getElementById("rating");
