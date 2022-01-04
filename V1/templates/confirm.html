@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>SpotifyRH</title>
+	</head>
+	<body>
+		<h2>Spotify Rabbit Hole</h2>
+		
+		<form action="/rabbithole" method="post">
+			{% for title, artist, track_id in zip(titles, artists, track_ids) %}
+				<div>
+					<h4>{{ loop.index ~ " star: " ~ title }} - {{ artist }}</h4>
+					<iframe src={{ "https://open.spotify.com/embed/track/" ~ track_id }} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+					
+					<input type="radio" name={{ "option" ~ loop.index0 }} value={{ loop.index }} checked style="display: none">
+					<input value={{ track_id }} name="track_ids" style="display: none">
+				</div>
+			{% endfor %}
+			<button class="btn" id="rate" type="submit">Continue</button>
+		</form>
+	</body>
+</html>
