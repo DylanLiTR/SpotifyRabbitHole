@@ -34,7 +34,7 @@ Have you ever found yourself in the YouTube rabbit hole, constantly clicking on 
 ### Things to fix
 1. Error when submitting without checking a radio button (use JS preventdefault)
 2. Find a better way to retrieve songs instead of getting a large set of recommendations from Spotify (could take a large dataset and use K Nearest Neighbours to find similar songs)
-  - It's ironic that this program sorts through Spotify's recommendations to give recommendations
+   - It's ironic that this program sorts through Spotify's recommendations to give recommendations
 
 ### Things to try
 - Bayesian Personalized Ranking
